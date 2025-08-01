@@ -95,7 +95,7 @@ async def save_file(media):
                 return False, 0
 
             primary_db_size = await check_db_size(db)
-            if primary_db_size >= 437:
+            if primary_db_size >= 438:
                 print("Primary Database Is Low On Space. Switching To Secondary DB.")
                 saveMedia = Media2
         except Exception as e:
@@ -128,6 +128,7 @@ async def save_file(media):
 # dev
        
 async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
+async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
     if chat_id is not None:
         settings = await get_settings(int(chat_id))
         try:
@@ -149,30 +150,40 @@ async def get_search_results(chat_id, query, file_type=None, max_results=10, off
         regex = re.compile(raw_pattern, flags=re.IGNORECASE)
     except:
         return []
-    if USE_CAPTION_FILTER:
-        filter = {'$or': [{'file_name': regex}, {'caption': regex}]}
-    else:
-        filter = {'file_name': regex}
+
+    search_filter = {'$or': [{'file_name': regex}, {'caption': regex}]} if USE_CAPTION_FILTER else {'file_name': regex}
     if file_type:
-        filter['file_type'] = file_type
-    total_results = await Media.count_documents(filter)
+        search_filter['file_type'] = file_type
+
+    # ✅ Use raw MongoDB collections
+    collection1 = db[COLLECTION_NAME]
+    collection2 = db2[COLLECTION_NAME]
+
+    total_results = await collection1.count_documents(search_filter)
     if MULTIPLE_DB:
-        total_results += await Media2.count_documents(filter)
+        total_results += await collection2.count_documents(search_filter)
+
     if max_results % 2 != 0:
         logger.info(f"Since max_results Is An Odd Number ({max_results}), Bot Will Use {max_results + 1} As max_results To Make It Even.")
         max_results += 1
-    cursor1 = Media.find(filter).sort('$natural', -1).skip(offset).limit(max_results)
+
+    files = []
+
+    cursor1 = collection1.find(search_filter).sort('$natural', -1).skip(offset).limit(max_results)
     files1 = await cursor1.to_list(length=max_results)
+    files.extend(files1)
+
     if MULTIPLE_DB:
-        remaining_results = max_results - len(files1)
-        cursor2 = Media2.find(filter).sort('$natural', -1).skip(offset).limit(remaining_results)
-        files2 = await cursor2.to_list(length=remaining_results)
-        files = files1 + files2
-    else:
-        files = files1
+        remaining = max_results - len(files1)
+        if remaining > 0:
+            cursor2 = collection2.find(search_filter).sort('$natural', -1).skip(offset).limit(remaining)
+            files2 = await cursor2.to_list(length=remaining)
+            files.extend(files2)
+
     next_offset = offset + len(files)
     if next_offset >= total_results:
         next_offset = ''
+
     return files, next_offset, total_results
     
 async def get_bad_files(query, file_type=None):
