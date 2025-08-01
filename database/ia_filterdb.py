@@ -88,19 +88,19 @@ async def save_file(media):
     db_collection = db[COLLECTION_NAME]
 
     if MULTIPLE_DB:
-        try:
-            exists = await db_collection.count_documents({'_id': file_id}, limit=1)
-            if exists:
-                print(f'{file_name} Is Already Saved In Primary Database!')
-                return False, 0
+    try:
+        exists = await db_collection.count_documents({'_id': file_id}, limit=1)
+        if exists:
+            print(f'{file_name} Is Already Saved In Primary Database!')
+            return False, 0
 
-            primary_db_size = await check_db_size(db)
-            if primary_db_size >= 438:
-                print("Primary Database Is Low On Space. Switching To Secondary DB.")
-                saveMedia = Media2
-        except Exception as e:
-            print(f"Error Checking Primary Db Size: {e}")
-            saveMedia = Media
+        # TEST MODE: Always use secondary DB
+        print("FORCE: Using Secondary DB for testing.")
+        saveMedia = Media2
+
+    except Exception as e:
+        print(f"Error Checking Primary Db Size: {e}")
+        saveMedia = Media
 
     try:
         file = saveMedia(
