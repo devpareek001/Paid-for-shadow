@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 _db_stats_cache = {
-    "timestamp": None,
-    "primary_size": 0
+    "timestamp": None,  
+    "primary_size": 0   
 }
 
 client = AsyncIOMotorClient(DATABASE_URI)
@@ -28,6 +28,7 @@ instance = Instance.from_db(db)
 client2 = AsyncIOMotorClient(DATABASE_URI2)
 db2 = client2[DATABASE_NAME]
 instance2 = Instance.from_db(db2)
+
 
 @instance.register
 class Media(Document):
@@ -65,43 +66,32 @@ async def check_db_size(db):
             return _db_stats_cache["primary_size"]
         stats = await db.command("dbstats")
         db_size = stats["dataSize"]
-        db_size_mb = db_size / (1024 * 1024)
+        db_size_mb = db_size / (1024 * 1024) 
         _db_stats_cache["primary_size"] = db_size_mb
         _db_stats_cache["timestamp"] = now
         return db_size_mb
     except Exception as e:
         print(f"Error Checking Database Size: {e}")
         return 0
-
-# ✅ UPDATED save_file() FUNCTION
+    
 async def save_file(media):
     file_id, file_ref = unpack_new_file_id(media.file_id)
-    
-    file_name = re.sub(
-        r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)",
-        " ",
-        str(media.file_name)
-    )
-    file_name = re.sub(r"\s+", " ", file_name)
-
+    file_name = re.sub(r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)", " ", str(media.file_name))
+    file_name = re.sub(r"\s+", " ", file_name)    
     saveMedia = Media
-    db_collection = db[COLLECTION_NAME]
-
     if MULTIPLE_DB:
+        exists = await Media.count_documents({'_id': file_id}, limit=1)
+        if exists:
+            print(f'{file_name} Is Already Saved In Primary Database!')
+            return False, 0
         try:
-            exists = await Media.find_one({'_id': file_id})
-            if exists:
-                print(f'{file_name} is already saved in Primary DB!')
-                return False, 0
-
             primary_db_size = await check_db_size(db)
-            if primary_db_size >= 438:
-                print("Primary Database is full. Switching to Secondary DB.")
+            if primary_db_size >= 480:
+                print("Primary Database Is Low On Space. Switching To Secondary DB.")
                 saveMedia = Media2
         except Exception as e:
-            print(f"Error during DB check: {e}")
+            print(f"Error Checking Primary Db Size: {e}")
             saveMedia = Media
-
     try:
         file = saveMedia(
             file_id=file_id,
@@ -115,18 +105,16 @@ async def save_file(media):
     except ValidationError as e:
         print(f'Validation Error While Saving File: {e}')
         return False, 2
-
-    try:
-        await file.commit()
-    except DuplicateKeyError:
-        print(f'{file_name} Is Already Saved In {"Secondary" if saveMedia == Media2 else "Primary"} Database')
-        return False, 0
     else:
-        print(f'{file_name} Saved Successfully In {"Secondary" if saveMedia == Media2 else "Primary"} Database')
-        return True, 1
-
-# dev
-       
+        try:
+            await file.commit()
+        except DuplicateKeyError:
+            print(f'{file_name} Is Already Saved In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
+            return False, 0
+        else:
+            print(f'{file_name} Saved Successfully In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
+            return True, 1
+            
 
 async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
     if chat_id is not None:
@@ -150,40 +138,30 @@ async def get_search_results(chat_id, query, file_type=None, max_results=10, off
         regex = re.compile(raw_pattern, flags=re.IGNORECASE)
     except:
         return []
-
-    search_filter = {'$or': [{'file_name': regex}, {'caption': regex}]} if USE_CAPTION_FILTER else {'file_name': regex}
+    if USE_CAPTION_FILTER:
+        filter = {'$or': [{'file_name': regex}, {'caption': regex}]}
+    else:
+        filter = {'file_name': regex}
     if file_type:
-        search_filter['file_type'] = file_type
-
-    # ✅ Use raw MongoDB collections
-    collection1 = db[COLLECTION_NAME]
-    collection2 = db2[COLLECTION_NAME]
-
-    total_results = await collection1.count_documents(search_filter)
+        filter['file_type'] = file_type
+    total_results = await Media.count_documents(filter)
     if MULTIPLE_DB:
-        total_results += await collection2.count_documents(search_filter)
-
+        total_results += await Media2.count_documents(filter)
     if max_results % 2 != 0:
         logger.info(f"Since max_results Is An Odd Number ({max_results}), Bot Will Use {max_results + 1} As max_results To Make It Even.")
         max_results += 1
-
-    files = []
-
-    cursor1 = collection1.find(search_filter).sort('$natural', -1).skip(offset).limit(max_results)
+    cursor1 = Media.find(filter).sort('$natural', -1).skip(offset).limit(max_results)
     files1 = await cursor1.to_list(length=max_results)
-    files.extend(files1)
-
     if MULTIPLE_DB:
-        remaining = max_results - len(files1)
-        if remaining > 0:
-            cursor2 = collection2.find(search_filter).sort('$natural', -1).skip(offset).limit(remaining)
-            files2 = await cursor2.to_list(length=remaining)
-            files.extend(files2)
-
+        remaining_results = max_results - len(files1)
+        cursor2 = Media2.find(filter).sort('$natural', -1).skip(offset).limit(remaining_results)
+        files2 = await cursor2.to_list(length=remaining_results)
+        files = files1 + files2
+    else:
+        files = files1
     next_offset = offset + len(files)
     if next_offset >= total_results:
         next_offset = ''
-
     return files, next_offset, total_results
     
 async def get_bad_files(query, file_type=None):
