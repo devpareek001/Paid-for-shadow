@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 _db_stats_cache = {
-    "timestamp": None,  
-    "primary_size": 0   
+    "timestamp": None,
+    "primary_size": 0
 }
 
 client = AsyncIOMotorClient(DATABASE_URI)
@@ -28,7 +28,6 @@ instance = Instance.from_db(db)
 client2 = AsyncIOMotorClient(DATABASE_URI2)
 db2 = client2[DATABASE_NAME]
 instance2 = Instance.from_db(db2)
-
 
 @instance.register
 class Media(Document):
@@ -66,32 +65,43 @@ async def check_db_size(db):
             return _db_stats_cache["primary_size"]
         stats = await db.command("dbstats")
         db_size = stats["dataSize"]
-        db_size_mb = db_size / (1024 * 1024) 
+        db_size_mb = db_size / (1024 * 1024)
         _db_stats_cache["primary_size"] = db_size_mb
         _db_stats_cache["timestamp"] = now
         return db_size_mb
     except Exception as e:
         print(f"Error Checking Database Size: {e}")
         return 0
-    
+
+# ✅ UPDATED save_file() FUNCTION
 async def save_file(media):
     file_id, file_ref = unpack_new_file_id(media.file_id)
-    file_name = re.sub(r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)", " ", str(media.file_name))
-    file_name = re.sub(r"\s+", " ", file_name)    
+    
+    file_name = re.sub(
+        r"@\w+|(_|\-|\.|\+|\#|\$|%|\^|&|\*|\(|\)|!|~|`|,|;|:|\"|\'|\?|/|<|>|\[|\]|\{|\}|=|\||\\)",
+        " ",
+        str(media.file_name)
+    )
+    file_name = re.sub(r"\s+", " ", file_name)
+
     saveMedia = Media
+    db_collection = db[COLLECTION_NAME]
+
     if MULTIPLE_DB:
-        exists = await Media.count_documents({'_id': file_id}, limit=1)
-        if exists:
-            print(f'{file_name} Is Already Saved In Primary Database!')
-            return False, 0
         try:
+            exists = await db_collection.count_documents({'_id': file_id}, limit=1)
+            if exists:
+                print(f'{file_name} Is Already Saved In Primary Database!')
+                return False, 0
+
             primary_db_size = await check_db_size(db)
-            if primary_db_size >= 407:
+            if primary_db_size >= 437:
                 print("Primary Database Is Low On Space. Switching To Secondary DB.")
                 saveMedia = Media2
         except Exception as e:
             print(f"Error Checking Primary Db Size: {e}")
             saveMedia = Media
+
     try:
         file = saveMedia(
             file_id=file_id,
@@ -105,17 +115,18 @@ async def save_file(media):
     except ValidationError as e:
         print(f'Validation Error While Saving File: {e}')
         return False, 2
-    else:
-        try:
-            await file.commit()
-        except DuplicateKeyError:
-            print(f'{file_name} Is Already Saved In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
-            return False, 0
-        else:
-            print(f'{file_name} Saved Successfully In {"Secondary" if saveMedia==Media2 else "Primary"} Database')
-            return True, 1
-            
 
+    try:
+        await file.commit()
+    except DuplicateKeyError:
+        print(f'{file_name} Is Already Saved In {"Secondary" if saveMedia == Media2 else "Primary"} Database')
+        return False, 0
+    else:
+        print(f'{file_name} Saved Successfully In {"Secondary" if saveMedia == Media2 else "Primary"} Database')
+        return True, 1
+
+# dev
+       
 async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
     if chat_id is not None:
         settings = await get_settings(int(chat_id))
