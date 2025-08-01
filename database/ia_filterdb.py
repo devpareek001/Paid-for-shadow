@@ -127,7 +127,7 @@ async def save_file(media):
 
 # dev
        
-async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
+
 async def get_search_results(chat_id, query, file_type=None, max_results=10, offset=0, filter=False):
     if chat_id is not None:
         settings = await get_settings(int(chat_id))
