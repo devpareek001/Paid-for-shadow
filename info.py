@@ -22,8 +22,8 @@ BOT_TOKEN = environ.get('BOT_TOKEN', "")
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
 USE_CAPTION_FILTER = bool(environ.get('USE_CAPTION_FILTER', True))
 
-PICS = (environ.get('PICS', 'https://graph.org/file/82224bd9fb82955f59e9f-946f7bf88ccade7aed.jpg https://graph.org/file/9d178c720074c6e13b66d-fceee1e8455bd86e0f.jpg https://graph.org/file/5db2382459f3dcaea240a-b0b3d29811a7227da7.jpg https://graph.org/file/626ee6e3b12630697924f-bb9d4aacbbe38415bd.jpg https://graph.org/file/32ce8a14701db278510a4-fb408ce7db4aebeccb.jpg https://graph.org/file/996f44b5ba51a5cf384f8-60817dfbe9f3d5f926.jpg https://graph.org/file/d62db0f1e1ca7c00b9c84-5c262aeabd4d104645.jpg https://graph.org/file/5105d2d949304523c00ef-2d703fd3d5f8e3d3c7.jpg https://graph.org/file/f60ad193597645330b192-5c5fa0215ba6c6a073.jpg https://graph.org/file/5a4e0cd4e05ed51bef118-f4a96e965a36231e5f.jpg https://graph.org/file/0c0a0a1f226bd8123775b-6d50af5f20dcdcc405.jpg https://graph.org/file/a480495135131c07a789a-a943fdad64a788cc8b.jpg https://graph.org/file/6b256570a9d389dbb428a-5b08b055559e8ac48e.jpg')).split() 
-NOR_IMG = environ.get("NOR_IMG", "https://graph.org/file/8002ab2a32b625a0bca90-2820e4c45072dd29d9.jpg")
+PICS = (environ.get('PICS', 'https://graph.org/file/ff2db586847b495e42e16-8a3fa612294f0eea46.jpg')).split() 
+NOR_IMG = environ.get("NOR_IMG", "https://graph.org/file/ae9367bfea49cd1396bd6-018591dec14aa88983.jpg")
 MELCOW_VID = environ.get("MELCOW_VID", "https://graph.org/file/e215d12bfd4fa2155e90e.mp4")
 SPELL_IMG = environ.get("SPELL_IMG", "https://graph.org/file/13702ae26fb05df52667c.jpg")
 SUBSCRIPTION = (environ.get('SUBSCRIPTION', 'https://graph.org/file/5f96df871f51b43010a60-d061e250f93b780f21.jpg'))
@@ -31,7 +31,7 @@ FSUB_IMG = (environ.get('FSUB_IMG', 'https://i.ibb.co/cShkPjcZ/x.jpg')).split()
 DONATE_IMG = environ.get("DONATE_IMG", "https://graph.org/file/3768bd857b7991d7bc72e-e9f5779b867af7dc2e.jpg")
 
 ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6914788581 8097146048 6585539560').split()] 
-CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '').split()]
+CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002802012255').split()]
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002650142441'))  
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002650142441'))  
 MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1002603862784'))  
