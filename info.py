@@ -54,7 +54,7 @@ DATABASE_URI2 = environ.get('DATABASE_URI2', "mongodb+srv://Demo22:Demo22@cluste
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/FWMoviesRequestGroup')
 CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/FWMoviesRequestGroup')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/ll_SoLo_ll')
-UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/FilmeyWorld')
+UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/FilmeyWorldUpdate')
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002357160920 -1002052588218") # add multiple channels here, separated by single space
 AUTH_CHANNEL = [int(ch) for ch in AUTH_CHANNEL.strip().split()] if AUTH_CHANNEL else []
