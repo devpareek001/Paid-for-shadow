@@ -30,7 +30,7 @@ SUBSCRIPTION = (environ.get('SUBSCRIPTION', 'https://graph.org/file/5f96df871f51
 FSUB_IMG = (environ.get('FSUB_IMG', 'https://i.ibb.co/cShkPjcZ/x.jpg')).split() 
 DONATE_IMG = environ.get("DONATE_IMG", "https://graph.org/file/3768bd857b7991d7bc72e-e9f5779b867af7dc2e.jpg")
 
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6914788581 8097146048 6585539560').split()] 
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6914788581 8097146048 6585539560 6071888646').split()] 
 CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002802012255').split()]
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002650142441'))  
 BIN_CHANNEL = int(environ.get('BIN_CHANNEL', '-1002650142441'))  
@@ -52,13 +52,13 @@ MULTIPLE_DB = is_enabled(os.environ.get('MULTIPLE_DB', "False"), False) # Type T
 DATABASE_URI2 = environ.get('DATABASE_URI2', "mongodb+srv://Demo22:Demo22@cluster0.pj7etfj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 GRP_LNK = environ.get('GRP_LNK', 'https://t.me/FWMoviesRequestGroup')
-CHNL_LNK = environ.get('CHNL_LNK', '')
+CHNL_LNK = environ.get('CHNL_LNK', 'https://t.me/FWMoviesRequestGroup')
 OWNER_LNK = environ.get('OWNER_LNK', 'https://t.me/ll_SoLo_ll')
 UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/FilmeyWorld')
 
-AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "") # add multiple channels here, separated by single space
+AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002357160920 -1002052588218") # add multiple channels here, separated by single space
 AUTH_CHANNEL = [int(ch) for ch in AUTH_CHANNEL.strip().split()] if AUTH_CHANNEL else []
-AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '') # add multiple channels here, separated by single space
+AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002179759236') # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = [int(ch) for ch in AUTH_REQ_CHANNEL.strip().split()] if AUTH_REQ_CHANNEL else []
 
 IS_VERIFY = is_enabled('IS_VERIFY', False)
