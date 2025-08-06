@@ -1449,7 +1449,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "upi":
         try:
             btn = [[ 
-                InlineKeyboardButton('📱 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ', url=OWNER_LNK),
+                InlineKeyboardButton('📱 ꜱᴇɴᴅ  ᴘᴀʏᴍᴇɴᴛ ꜱᴄʀᴇᴇɴꜱʜᴏᴛ', url="https://t.me/+LaNL0NX94NMwNDk9"),
             ],[
                 InlineKeyboardButton('🚫 ᴄʟᴏꜱᴇ 🚫', callback_data='close_data')
             ]]
@@ -1535,7 +1535,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url=OWNER_LNK),
+            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url="https://t.me/+LaNL0NX94NMwNDk9"),
         ], [
             InlineKeyboardButton("⬅️ Back", callback_data="about")
         ]]
