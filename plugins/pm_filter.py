@@ -1531,7 +1531,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url="https://t.me/+LaNL0NX94NMwNDk9"),
+            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url="https://t.me/ll_SoLo_ll"),
         ], [
             InlineKeyboardButton("⬅️ Back", callback_data="about")
         ]]
