@@ -254,7 +254,7 @@ Nᴀᴍᴇ : {}
 
 Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
     
-    CAPTION = """<b><a href="https://t.me/MoviesEmpire_Backup">{file_name}</a>\n\n Powered By: @hdhub4u1bot </b>"""
+    CAPTION = """<b><a href="https://t.me/FilmeyWorld">{file_name}</a>\n\n Powered By: @FWSOLOBOT </b>"""
 
     IMDB_TEMPLATE_TXT = """
 <b>🏷 Title</b>: <a href={url}>{title}</a>
