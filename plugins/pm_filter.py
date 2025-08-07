@@ -1529,7 +1529,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
         buttons = [[
             InlineKeyboardButton('💖 𝙳𝚘𝚗𝚊𝚝𝚎', callback_data='donate'),
             InlineKeyboardButton('🎁 𝚂𝚘𝚞𝚛𝚌𝚎', callback_data='source')
-        ],[
+	],[
+	    InlineKeyboardButton('❗ Dɪsᴄʟᴀɪᴍᴇʀ ❗', callback_data='DMCA')
+	],[
             InlineKeyboardButton('⇋ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ ⇋', callback_data='start')
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
@@ -1560,7 +1562,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "donate":
         buttons = [[
-            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url="https://t.me/ll_SoLo_ll"),
+            InlineKeyboardButton('🐻‍❄️ Sᴇɴᴅ Dᴏɴᴀᴛᴇ Sᴄʀᴇᴇɴꜱʜᴏᴛ Hᴇʀᴇ', url="https://t.me/FilmeyWorldSupport"),
         ], [
             InlineKeyboardButton("⬅️ Back", callback_data="about")
         ]]
@@ -1592,6 +1594,16 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 reply_markup=reply_markup,
                 parse_mode=enums.ParseMode.HTML 
             )
+   elif query.data == "DMCA":
+            btn = [[
+                    InlineKeyboardButton("⇋ ʙᴀᴄᴋ ⇋", callback_data="start")
+                  ]]
+            reply_markup = InlineKeyboardMarkup(btn)
+            await query.message.edit_text(
+                text=(script.DMCA_TXT),
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML 
+	    )
 
     elif query.data.startswith("grp_pm"):
         _, grp_id = query.data.split("#")
