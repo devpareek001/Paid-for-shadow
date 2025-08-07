@@ -1595,15 +1595,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 parse_mode=enums.ParseMode.HTML 
             )
    elif query.data == "DMCA":
-            btn = [[
-                    InlineKeyboardButton("⇋ ʙᴀᴄᴋ ⇋", callback_data="start")
-                  ]]
-            reply_markup = InlineKeyboardMarkup(btn)
-            await query.message.edit_text(
-                text=(script.DMCA_TXT),
-                reply_markup=reply_markup,
-                parse_mode=enums.ParseMode.HTML 
-	    )
+        btn = [[
+            InlineKeyboardButton("⇋ ʙᴀᴄᴋ ⇋", callback_data="start")
+        ]]
+        reply_markup = InlineKeyboardMarkup(btn)
+        await query.message.edit_text(
+            text=(script.DMCA_TXT),
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML 
+        )
 
     elif query.data.startswith("grp_pm"):
         _, grp_id = query.data.split("#")
