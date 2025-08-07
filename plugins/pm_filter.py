@@ -1422,7 +1422,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
     elif query.data == "premium":
         try:
-        # ✅ No alert – directly update message
+        # Buttons for premium section
             btn = [[
                 InlineKeyboardButton('🧧 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 🧧', callback_data='buy'),
             ],[
@@ -1433,14 +1433,17 @@ async def cb_handler(client: Client, query: CallbackQuery):
             ]]
             reply_markup = InlineKeyboardMarkup(btn)
 
-        # ✅ Optional: replace photo with premium image
-            await client.edit_message_media(
-                chat_id=query.message.chat.id,
-                message_id=query.message.id,
-                media=InputMediaPhoto(random.choice(PICS))  # Optional
-            )
+        # Try editing media (photo), if message has media
+            try:
+                await client.edit_message_media(                
+                    chat_id=query.message.chat.id,
+                    message_id=query.message.id,
+                    media=InputMediaPhoto(random.choice(PICS))
+                )
+            except Exception as e:
+                print("Media update skipped:", e)
 
-        # ✅ Replace movie list text with premium message
+        # Always update text
             await query.message.edit_text(
                 text=script.BPREMIUM_TXT,
                 reply_markup=reply_markup,
@@ -1448,7 +1451,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             )
 
         except Exception as e:
-            print(e)
+            print("Error in premium handler:", e)
 
     elif query.data == "buy":
         try:
