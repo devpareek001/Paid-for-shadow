@@ -1421,38 +1421,34 @@ async def cb_handler(client: Client, query: CallbackQuery):
             print(e)
 
     elif query.data == "premium":
-    try:
-        # Check if the user clicked from a group
-        if query.message.chat.type != enums.ChatType.PRIVATE:
-            await query.answer(
-                "🙏 Namaste! Premium features dekhne ke liye bot ko DM me open karein.",
-                show_alert=True
+        try:
+        # ✅ No alert – directly update message
+            btn = [[
+                InlineKeyboardButton('🧧 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 🧧', callback_data='buy'),
+            ],[
+                InlineKeyboardButton('👥 ʀᴇꜰᴇʀ ꜰʀɪᴇɴᴅꜱ', callback_data='reffff'),
+                InlineKeyboardButton('🈚 ꜰʀᴇᴇ ᴛʀɪᴀʟ', callback_data='give_trial')
+            ],[
+                InlineKeyboardButton('⇋ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ ⇋', callback_data='start')
+            ]]
+            reply_markup = InlineKeyboardMarkup(btn)
+
+        # ✅ Optional: replace photo with premium image
+            await client.edit_message_media(
+                chat_id=query.message.chat.id,
+                message_id=query.message.id,
+                media=InputMediaPhoto(random.choice(PICS))  # Optional
             )
-            return
 
-        # In private chat: show full premium menu
-        btn = [[
-            InlineKeyboardButton('🧧 ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ 🧧', callback_data='buy'),
-        ],[
-            InlineKeyboardButton('👥 ʀᴇꜰᴇʀ ꜰʀɪᴇɴᴅꜱ', callback_data='reffff'),
-            InlineKeyboardButton('🈚 ꜰʀᴇᴇ ᴛʀɪᴀʟ', callback_data='give_trial')
-        ],[
-            InlineKeyboardButton('⇋ ʙᴀᴄᴋ ᴛᴏ ʜᴏᴍᴇ ⇋', callback_data='start')
-        ]]
-        reply_markup = InlineKeyboardMarkup(btn)
+        # ✅ Replace movie list text with premium message
+            await query.message.edit_text(
+                text=script.BPREMIUM_TXT,
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
 
-        await client.edit_message_media(                
-            query.message.chat.id, 
-            query.message.id, 
-            InputMediaPhoto(random.choice(PICS))                       
-        )
-        await query.message.edit_text(
-            text=script.BPREMIUM_TXT,
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
-        )
-    except Exception as e:
-        print(e)
+        except Exception as e:
+            print(e)
 
     elif query.data == "buy":
         try:
