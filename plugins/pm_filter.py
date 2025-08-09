@@ -2131,30 +2131,17 @@ async def auto_filter(client, msg, spoll=False):
         )
         temp.IMDB_CAP[message.from_user.id] = cap
         if not settings.get('button'):
-            for file_num, file in enumerate(files, start=1):
-                cap += f"\n\n<b>{file_num}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>{get_size(file.file_size)} | {clean_filename(file.file_name)}</a></b>"
+            cap += "\n\n<b>🧾 <u>Your Requested Files Are Here</u> 👇</b>"
+            for idx, file in enumerate(files, start=1):
+                cap += f"<b>\n{idx}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>[{get_size(file.file_size)}] {clean_filename(file.file_name)}\n</a></b>"
     else:
-        
-        cap = (
-        f"<b>🏷 Title: {title}\n"
-        f"⏰ Result Shown in: {remaining_seconds} seconds\n"
-        f"🔥 Requested by: {message.from_user.mention}</b>\n\n"
-    )
+        if settings.get('button'):
+            cap = f"<b>🏷 ᴛɪᴛʟᴇ : <code>{search}</code>\n🧱 ᴛᴏᴛᴀʟ ꜰɪʟᴇꜱ : <code>{total_results}</code>\n⏰ ʀᴇsᴜʟᴛ ɪɴ : <code>{remaining_seconds} Sᴇᴄᴏɴᴅs</code>\n\n📝 ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ : {message.from_user.mention}\n⚜️ ᴘᴏᴡᴇʀᴇᴅ ʙʏ : ⚡ {message.chat.title or temp.B_LINK or 'ᴅʀᴇᴀᴍxʙᴏᴛᴢ'} \n\n🧾 <u>Your Requested Files Are Here</u> 👇 \n\n</b>"
+        else:
+            cap = f"<b>🏷 ᴛɪᴛʟᴇ : <code>{search}</code>\n🧱 ᴛᴏᴛᴀʟ ꜰɪʟᴇꜱ : <code>{total_results}</code>\n⏰ ʀᴇsᴜʟᴛ ɪɴ : <code>{remaining_seconds} Sᴇᴄᴏɴᴅs</code>\n\n📝 ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ : {message.from_user.mention}\n⚜️ ᴘᴏᴡᴇʀᴇᴅ ʙʏ : ⚡ {message.chat.title or temp.B_LINK or 'ᴅʀᴇᴀᴍxʙᴏᴛᴢ'} \n\n🧾 <u>Your Requested Files Are Here</u> 👇 \n\n</b>"
 
-
-    if settings.get('button'):
-        pass   
-
-
-    else:
-        for file_num, file in enumerate(files, start=1):
-            cap += (
-                f"<b>📂 {file_num}. "
-                f"<a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>"
-                f"{get_size(file.file_size)} | {clean_filename(file.file_name)}</a></b>\n\n"
-            )
-
-
+            for idx, file in enumerate(files, start=1):
+                cap += f"<b>\n{idx}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>[{get_size(file.file_size)}] {clean_filename(file.file_name)}\n</a></b>"
     if imdb and imdb.get('poster'):
     pass  # poster ka kaam yaha hoga
         try:
