@@ -2134,13 +2134,29 @@ async def auto_filter(client, msg, spoll=False):
             for file_num, file in enumerate(files, start=1):
                 cap += f"\n\n<b>{file_num}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>{get_size(file.file_size)} | {clean_filename(file.file_name)}</a></b>"
     else:
-        if settings.get('button'):
-            cap =f"<b>🏷 Title: {title}\n⏰Result Shown in: {remaining_seconds} seconds \n🔥Requested by : {message.from_user.mention}</b>\n\n"
-        else:
-            cap =f"<b>🏷 Title: {title}\n⏰Result Shown in: {remaining_seconds} seconds \n🔥Requested by : {message.from_user.mention}</b>\n\n"            
-            for file_num, file in enumerate(files, start=1):
-                cap += f"<b>📂. <a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>{get_size(file.file_size)} | {clean_filename(file.file_name)}\n\n</a></b>"                
+        
+        cap = (
+        f"<b>🏷 Title: {title}\n"
+        f"⏰ Result Shown in: {remaining_seconds} seconds\n"
+        f"🔥 Requested by: {message.from_user.mention}</b>\n\n"
+    )
+
+
+    if settings.get('button'):
+        pass   
+
+
+    else:
+        for file_num, file in enumerate(files, start=1):
+            cap += (
+                f"<b>📂 {file_num}. "
+                f"<a href='https://telegram.me/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'>"
+                f"{get_size(file.file_size)} | {clean_filename(file.file_name)}</a></b>\n\n"
+            )
+
+
     if imdb and imdb.get('poster'):
+    pass  # poster ka kaam yaha hoga
         try:
             hehe = await m.edit_photo(photo=imdb.get('poster'), caption=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
             try:
