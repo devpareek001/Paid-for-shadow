@@ -637,6 +637,7 @@ async def get_cap(settings, remaining_seconds, files, query, total_results, sear
         return cap
 
 async def group_setting_buttons(grp_id):
+    
     settings = await get_settings(grp_id)
     buttons = [[
                 InlineKeyboardButton('ʀᴇꜱᴜʟᴛ ᴘᴀɢᴇ', callback_data=f'setgs#button#{settings.get("button")}#{grp_id}',),
