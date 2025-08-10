@@ -548,75 +548,75 @@ async def get_seconds(time_string):
         return 0
     
 async def get_cap(settings, remaining_seconds, files, query, total_results, search, offset):
-    if settings["imdb"]:
-        IMDB_CAP = temp.IMDB_CAP.get(query.from_user.id)
-        if IMDB_CAP:
-            cap = IMDB_CAP
-            for file_num, file in enumerate(files, start=offset+1):
-                cap += f"\n\n<b>{file_num}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file.file_id}'>{get_size(file.file_size)}| {clean_filename(file.file_name)}</a></b>"
-        else:
-            imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None
-            if imdb:
-                TEMPLATE = script.IMDB_TEMPLATE_TXT
-                cap = TEMPLATE.format(
-                    qurey=search,
-                    title=imdb['title'],
-                    votes=imdb['votes'],
-                    aka=imdb["aka"],
-                    seasons=imdb["seasons"],
-                    box_office=imdb['box_office'],
-                    localized_title=imdb['localized_title'],
-                    kind=imdb['kind'],
-                    imdb_id=imdb["imdb_id"],
-                    cast=imdb["cast"],
-                    runtime=imdb["runtime"],
-                    countries=imdb["countries"],
-                    certificates=imdb["certificates"],
-                    languages=imdb["languages"],
-                    director=imdb["director"],
-                    writer=imdb["writer"],
-                    producer=imdb["producer"],
-                    composer=imdb["composer"],
-                    cinematographer=imdb["cinematographer"],
-                    music_team=imdb["music_team"],
-                    distributors=imdb["distributors"],
-                    release_date=imdb['release_date'],
-                    year=imdb['year'],
-                    genres=imdb['genres'],
-                    poster=imdb['poster'],
-                    plot=imdb['plot'],
-                    rating=imdb['rating'],
-                    url=imdb['url'],
-                    **locals()
-                )
+    try:
+        if settings["imdb"]:
+            IMDB_CAP = temp.IMDB_CAP.get(query.from_user.id)
+            if IMDB_CAP:
+                cap = IMDB_CAP
+                for file_num, file in enumerate(files, start=offset+1):
+                    cap += f"\n\n<b>{file_num}. <a href='https://telegram.me/{temp.U_NAME}?start=file_{query.message.chat.id}_{file.file_id}'>{get_size(file.file_size)}| {clean_filename(file.file_name)}</a></b>"
+            else:
+                imdb_data = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None
+                if imdb_data:
+                    TEMPLATE = script.IMDB_TEMPLATE_TXT
+                    cap = TEMPLATE.format(
+                        qurey=search,
+                        title=imdb_data['title'],
+                        votes=imdb_data['votes'],
+                        aka=imdb_data["aka"],
+                        seasons=imdb_data["seasons"],
+                        box_office=imdb_data['box_office'],
+                        localized_title=imdb_data['localized_title'],
+                        kind=imdb_data['kind'],
+                        imdb_id=imdb_data["imdb_id"],
+                        cast=imdb_data["cast"],
+                        runtime=imdb_data["runtime"],
+                        countries=imdb_data["countries"],
+                        certificates=imdb_data["certificates"],
+                        languages=imdb_data["languages"],
+                        director=imdb_data["director"],
+                        writer=imdb_data["writer"],
+                        producer=imdb_data["producer"],
+                        composer=imdb_data["composer"],
+                        cinematographer=imdb_data["cinematographer"],
+                        music_team=imdb_data["music_team"],
+                        distributors=imdb_data["distributors"],
+                        release_date=imdb_data['release_date'],
+                        year=imdb_data['year'],
+                        genres=imdb_data['genres'],
+                        poster=imdb_data['poster'],
+                        plot=imdb_data['plot'],
+                        rating=imdb_data['rating'],
+                        url=imdb_data['url'],
+                        **locals()
+                    )
                     for idx, file in enumerate(files, start=offset+1):
-                             cap += (
-                                f"<b>{idx}. "
-                                f"<a href='https://telegram.me/{temp.U_NAME}"
-                                f"?start=file_{query.message.chat.id}_{file.file_id}'>"
-                                f"[{get_size(file.file_size)}] "
-                                f"{clean_filename(file.file_name)}\n\n"
-                                f"</a></b>"
-                            )
-                    else:
-                        cap = (
-                            f"<b>🏷 ᴛɪᴛʟᴇ : <code>{search}</code>\n"
-                            f"🧱 ᴛᴏᴛᴀʟ ꜰɪʟᴇꜱ : <code>{total_results}</code>\n"
-                            f"⏰ ʀᴇsᴜʟᴛ ɪɴ : <code>{remaining_seconds} Sᴇᴄᴏɴᴅs</code>\n\n"
-                            f"📝 ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ : {query.from_user.mention}\n"
-                            f"⚜️ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :⚡ {query.message.chat.title}\n</b>"
+                        cap += (
+                            f"<b>{idx}. "
+                            f"<a href='https://telegram.me/{temp.U_NAME}"
+                            f"?start=file_{query.message.chat.id}_{file.file_id}'>"
+                            f"[{get_size(file.file_size)}] "
+                            f"{clean_filename(file.file_name)}\n\n"
+                            f"</a></b>"
                         )
-                        cap += "\n\n🧾 <u>Your Requested Files Are Here</u> 👇 👇\n\n</b>"
-                        for idx, file in enumerate(files, start=offset + 1):
-                            cap += (
-                                f"<b>{idx}. "
-                                f"<a href='https://telegram.me/{temp.U_NAME}"
-                                f"?start=file_{query.message.chat.id}_{file.file_id}'>"
-                                f"[{get_size(file.file_size)}] "
-                                f"{clean_filename(file.file_name)}\n\n"
-                                f"</a></b>"
-                            )
-
+                else:
+                    cap = (
+                        f"<b>🏷 ᴛɪᴛʟᴇ : <code>{search}</code>\n"
+                        f"🧱 ᴛᴏᴛᴀʟ ꜰɪʟᴇꜱ : <code>{total_results}</code>\n"
+                        f"⏰ ʀᴇsᴜʟᴛ ɪɴ : <code>{remaining_seconds} Sᴇᴄᴏɴᴅs</code>\n\n"
+                        f"📝 ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ : {query.from_user.mention}\n"
+                        f"⚜️ ᴘᴏᴡᴇʀᴇᴅ ʙʏ :⚡ {query.message.chat.title}\n</b>"
+                    )
+                    cap += "\n\n🧾 <u>Your Requested Files Are Here</u> 👇 👇\n\n</b>"
+                    for idx, file in enumerate(files, start=offset + 1):
+                        cap += (
+                            f"<b>{idx}. "
+                            f"<a href='https://telegram.me/{temp.U_NAME}"
+                            f"?start=file_{query.message.chat.id}_{file.file_id}'>"
+                            f"[{get_size(file.file_size)}] "
+                            f"{clean_filename(file.file_name)}\n\n"
+                            f"</a></b>"
+                        )
         else:
             cap = (
                 f"<b>🏷 ᴛɪᴛʟᴇ : <code>{search}</code>\n"
@@ -626,46 +626,46 @@ async def get_cap(settings, remaining_seconds, files, query, total_results, sear
             )
             cap += "\n\n🧾 <u>Your Requested Files Are Here</u> 👇\n\n</b>"
             for idx, file in enumerate(files, start=offset):
-                        cap += (
-                            f"<b>{idx}. "
-                            f"<a href='https://telegram.me/{temp.U_NAME}"
-                            f"?start=file_{query.message.chat.id}_{file.file_id}'>"
-                            f"[{get_size(file.file_size)}] "
-                            f"{clean_filename(file.file_name)}\n\n"
-                            f"</a></b>"
-                        )
+                cap += (
+                    f"<b>{idx}. "
+                    f"<a href='https://telegram.me/{temp.U_NAME}"
+                    f"?start=file_{query.message.chat.id}_{file.file_id}'>"
+                    f"[{get_size(file.file_size)}] "
+                    f"{clean_filename(file.file_name)}\n\n"
+                    f"</a></b>"
+                )
         return cap
     except Exception as e:
         logging.error(f"Error in get_cap: {e}")
-        pass
+        return None
 
-        async def group_setting_buttons(grp_id):
-    
+
+async def group_setting_buttons(grp_id):
     settings = await get_settings(grp_id)
     buttons = [[
-                InlineKeyboardButton('ʀᴇꜱᴜʟᴛ ᴘᴀɢᴇ', callback_data=f'setgs#button#{settings.get("button")}#{grp_id}',),
-                InlineKeyboardButton('ʙᴜᴛᴛᴏɴ' if settings.get("button") else 'ᴛᴇxᴛ', callback_data=f'setgs#button#{settings.get("button")}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ꜰɪʟᴇ ꜱᴇᴄᴜʀᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}',),
-                InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["file_secure"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ɪᴍᴅʙ ᴘᴏꜱᴛᴇʀ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}',),
-                InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["imdb"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ᴡᴇʟᴄᴏᴍᴇ ᴍꜱɢ', callback_data=f'setgs#welcome#{settings["welcome"]}#{grp_id}',),
-                InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["welcome"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#welcome#{settings["welcome"]}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}',),
-                InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["auto_delete"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ᴍᴀx ʙᴜᴛᴛᴏɴꜱ', callback_data=f'setgs#max_btn#{settings["max_btn"]}#{grp_id}',),
-                InlineKeyboardButton('10' if settings["max_btn"] else f'{MAX_B_TN}', callback_data=f'setgs#max_btn#{settings["max_btn"]}#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ ᴍᴏᴅᴇ', callback_data=f'verification_setgs#{grp_id}',),
-            ],[
-                InlineKeyboardButton('ʟᴏɢ ᴄʜᴀɴɴᴇʟ', callback_data=f'log_setgs#{grp_id}',),
-                InlineKeyboardButton('ꜱᴇᴛ ᴄᴀᴘᴛɪᴏɴ', callback_data=f'caption_setgs#{grp_id}',),   
-            ],[
-                InlineKeyboardButton('⇋ ᴄʟᴏꜱᴇ ꜱᴇᴛᴛɪɴɢꜱ ᴍᴇɴᴜ ⇋', callback_data='close_data')
+        InlineKeyboardButton('ʀᴇꜱᴜʟᴛ ᴘᴀɢᴇ', callback_data=f'setgs#button#{settings.get("button")}#{grp_id}',),
+        InlineKeyboardButton('ʙᴜᴛᴛᴏɴ' if settings.get("button") else 'ᴛᴇxᴛ', callback_data=f'setgs#button#{settings.get("button")}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ꜰɪʟᴇ ꜱᴇᴄᴜʀᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}',),
+        InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["file_secure"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#file_secure#{settings["file_secure"]}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ɪᴍᴅʙ ᴘᴏꜱᴛᴇʀ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}',),
+        InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["imdb"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#imdb#{settings["imdb"]}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ᴡᴇʟᴄᴏᴍᴇ ᴍꜱɢ', callback_data=f'setgs#welcome#{settings["welcome"]}#{grp_id}',),
+        InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["welcome"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#welcome#{settings["welcome"]}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}',),
+        InlineKeyboardButton('ᴇɴᴀʙʟᴇ' if settings["auto_delete"] else 'ᴅɪꜱᴀʙʟᴇ', callback_data=f'setgs#auto_delete#{settings["auto_delete"]}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ᴍᴀx ʙᴜᴛᴛᴏɴꜱ', callback_data=f'setgs#max_btn#{settings["max_btn"]}#{grp_id}',),
+        InlineKeyboardButton('10' if settings["max_btn"] else f'{MAX_B_TN}', callback_data=f'setgs#max_btn#{settings["max_btn"]}#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ ᴍᴏᴅᴇ', callback_data=f'verification_setgs#{grp_id}',),
+    ],[
+        InlineKeyboardButton('ʟᴏɢ ᴄʜᴀɴɴᴇʟ', callback_data=f'log_setgs#{grp_id}',),
+        InlineKeyboardButton('ꜱᴇᴛ ᴄᴀᴘᴛɪᴏɴ', callback_data=f'caption_setgs#{grp_id}',),   
+    ],[
+        InlineKeyboardButton('⇋ ᴄʟᴏꜱᴇ ꜱᴇᴛᴛɪɴɢꜱ ᴍᴇɴᴜ ⇋', callback_data='close_data')
     ]]
     return buttons
