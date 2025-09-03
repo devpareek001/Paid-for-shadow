@@ -58,7 +58,7 @@ UPDATE_CHANNEL_LNK = environ.get('UPDATE_CHANNEL_LNK', 'https://t.me/FilmeyWorld
 
 AUTH_CHANNEL = environ.get("AUTH_CHANNEL", "-1002357160920 -1002052588218") # add multiple channels here, separated by single space
 AUTH_CHANNEL = [int(ch) for ch in AUTH_CHANNEL.strip().split()] if AUTH_CHANNEL else []
-AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '-1002179759236') # add multiple channels here, separated by single space
+AUTH_REQ_CHANNEL = environ.get('AUTH_REQ_CHANNEL', '') # add multiple channels here, separated by single space
 AUTH_REQ_CHANNEL = [int(ch) for ch in AUTH_REQ_CHANNEL.strip().split()] if AUTH_REQ_CHANNEL else []
 
 IS_VERIFY = is_enabled('IS_VERIFY', False)
@@ -70,14 +70,14 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/FilmeyWorld/905")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
 
-SHORTENER_API = environ.get("SHORTENER_API", "5eb21caac29e8bf88cb75aaae34bbf9a75890a28")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "Seturl.in")
+SHORTENER_API = environ.get("SHORTENER_API", "a724d7859b3b20eebd7055cad447574064e7229b")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", "arolinks.com")
 
-SHORTENER_API2 = environ.get("SHORTENER_API2", "5eb21caac29e8bf88cb75aaae34bbf9a75890a28")
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "Seturl.in")
+SHORTENER_API2 = environ.get("SHORTENER_API2", "a724d7859b3b20eebd7055cad447574064e7229b")
+SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", "arolinks.com")
 
-SHORTENER_API3 = environ.get("SHORTENER_API3", "5eb21caac29e8bf88cb75aaae34bbf9a75890a28")
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "Seturl.in")
+SHORTENER_API3 = environ.get("SHORTENER_API3", "a724d7859b3b20eebd7055cad447574064e7229b")
+SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", "arolinks.com")
 
 TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "1200"))
 THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "54000"))
