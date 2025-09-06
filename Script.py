@@ -258,7 +258,7 @@ Nᴀᴍᴇ : {}
 
 Mᴇꜱꜱᴀɢᴇ : <b>{}</b>"""
     
-    CAPTION = """<b><a href="https://t.me/FilmeyWorld">{file_name}</a>\n\n Powered By: @FWSOLOBOT </b>"""
+    CAPTION = """<b><a href="https://t.me/FilmeyWorld">{default_caption}</a>\n\n Powered By: @FWSOLOBOT </b>"""
 
     IMDB_TEMPLATE_TXT = """
 <b>🏷 Title</b>: <a href={url}>{title}</a>
